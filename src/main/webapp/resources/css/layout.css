@@ -1,14 +1,21 @@
+/*
+The unholy place...
+...you can feel [my] suffering in every line...
+*/
+
 #header {
     top: 0;
     height: 80px;
     position: fixed;
-    background-color: green;
+    background-color: lightcoral;
+    /*overflow: hidden;*/
     width: 100%;
 }
 
 #header .inner {
     width: 80%;
     margin: auto;
+    /*overflow: hidden;*/
 }
 
 #main {
@@ -19,6 +26,20 @@
 
 #header form {
     display: inline;
+}
+
+#filterSources, #selectSource {
+    display: block;
+}
+
+#filterSources {
+    width: 50%;
+    float: left;
+}
+
+#selectSource {
+    width: 30%;
+    float: right;
 }
 
 .selectOneMenu {
@@ -33,41 +54,43 @@
     width: 100%;
     overflow: hidden;
     margin: auto auto 50px;
+    background-color: floralwhite;
 }
 
-.source-header {
+.source-aside {
     width: 30%;
     float: left;
+    overflow: hidden;
 }
 
-.source-header .image-wrapper {
+.source-aside .image-wrapper {
     width: 90%;
     padding: 5%;
     margin: auto;
     overflow: hidden;
 }
 
-.image-wrapper img {
+.source-wrapper .description {
     width: 100%;
 }
 
-.source-header span.title {
-    text-align: center;
+.description p {
+    padding: 5%;
+}
+
+.image-wrapper img {
+    width: 100%;
 }
 
 .articles-wrapper {
     width: 60%;
     padding: 5%;
-    /*float: left;*/
-    /*float: right;*/
     margin-left: 30%;
-    /*background-color: azure;*/
+    background-color: white;
 }
 
 .article {
     width: 90%;
-    /*background-color: azure;*/
-    background-color: floralwhite;
     margin: auto auto 2%;
     padding: 5%;
     overflow: hidden;
@@ -87,3 +110,65 @@
     width: 100%;
 }
 
+/* OMG, that escalated quickly */
+
+#selectSource .ui-selectonemenu,
+#selectSource .ui-selectonemenu-label {
+    width: 150px !important;
+    vertical-align:middle;
+}
+
+#filterSources .ui-selectonemenu,
+#filterSources .ui-selectonemenu-label{
+    width: 100px !important;
+    vertical-align:middle;
+}
+
+#filterSources, #selectSource {
+    clear: both;
+}
+
+.ui-selectonemenu-items, .ui-selectonemenu-list {
+    background: floralwhite !important;
+}
+
+.ui-inputfield { box-shadow: none !important; }
+
+.ui-selectonemenu-panel .ui-selectonemenu-items-wrapper {
+    overflow-x: hidden !important;
+}
+
+#poweredBy {
+    color: floralwhite;
+}
+
+#poweredBy a {
+    text-decoration: none;
+    color: lightseagreen;
+}
+
+#header .lower {
+    max-width: 20%;
+    margin: auto;
+}
+
+#filterContainer {
+    width: 100%;
+    clear: both;
+}
+
+span.author {
+    font-style: italic;
+}
+
+span.title {
+    font-weight: bold;
+}
+
+#logo {
+    color: floralwhite;
+    display: block;
+    font-size: 2rem;
+    white-space: nowrap;
+    width: 20%;
+}

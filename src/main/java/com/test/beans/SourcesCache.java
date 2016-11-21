@@ -9,7 +9,8 @@ import javax.inject.Named;
 import java.util.List;
 
 /**
- * The instance of the class holds (acts like a cache, hence the name) all {@link com.test.model.Source}s available by <a href="https://newsapi.org">newsapi.org</a>.
+ * The instance of the class holds (acts like a cache, hence the name)
+ * all {@link com.test.model.Source}s available by <a href="https://newsapi.org">newsapi.org</a>.
  */
 // Application scope is chosen because those sources are the same for every user
 // and they are very unlikely to change.

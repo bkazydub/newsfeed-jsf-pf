@@ -2,6 +2,9 @@ package com.test.model;
 
 import java.io.Serializable;
 
+/**
+ * Model for live article metadata from a news source or blog.
+ */
 public class Article implements Serializable {
     private String author;
     private String description;

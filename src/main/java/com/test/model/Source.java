@@ -1,29 +1,11 @@
 package com.test.model;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.List;
 
+/**
+ * Model for news source or blogs available on <a href=" https://newsapi.org/v1/sources">News API</a>.
+ */
 public class Source implements Serializable {
-
-    /**
-     * All possible options for {@code category} parameter you may get sources for
-     */
-    /*public static final String[] categories = {
-        "business", "entertainment", "gaming",
-        "general", "music", "science-and-nature",
-        "sport", "technology"
-    };
-
-    public static final String[] languages = {
-        "en", "de", "fr"
-    };
-
-    public static final String[] countries = {
-        "au", "de", "gb", "in", "it", "us"
-    };*/
-
     private String id;
     private String name;
     private String description;
@@ -31,13 +13,8 @@ public class Source implements Serializable {
     private String category;
     private String language;
     private String country;
-    // private String[] urlsToLogos;
-    // todo: decide what to do with this one
     private Logos urlsToLogos;
     private String[] sortBysAvailable;
-    // non-json
-    /*@XmlTransient
-    private List<Article> articles;*/
 
     public Source() {
     }
@@ -143,12 +120,4 @@ public class Source implements Serializable {
             this.large = large;
         }
     }
-
-    /*public List<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(List<Article> articles) {
-        this.articles = articles;
-    }*/
 }

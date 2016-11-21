@@ -9,6 +9,7 @@ import java.util.List;
  * with message describing what the error is about.
  */
 public class SourcesResponse implements Serializable {
+    // represents response status (either "ok" or "error")
     private String status;
 
     // IMPORTANT
@@ -25,6 +26,7 @@ public class SourcesResponse implements Serializable {
 
     // populated in case if status == "error"
     private String message;
+    // array of sources in response (if status == "ok")
     private List<Source> sources;
 
     public SourcesResponse() {

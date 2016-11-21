@@ -33,7 +33,7 @@ public class SourceConverter implements Converter {
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
         if (value == null)
-            return "";
+             return "";
 
         if (value instanceof Source) {
             return ((Source) value).getId();

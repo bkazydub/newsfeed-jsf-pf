@@ -6,54 +6,66 @@
       xmlns:pe="http://primefaces.org/ui/extensions">
 
     <h:head>
-        <h:outputStylesheet library="css" name="layout.css"/>
         <title>News Feed</title>
     </h:head>
 
     <h:body>
+        <h:outputStylesheet library="css" name="layout.css"/>
 
     <f:metadata>
         <!-- make use of 'get' request parameters -->
         <f:viewParam name="category" value="#{newsfeedView.category}" required="false"/>
         <f:viewParam name="language" value="#{newsfeedView.language}" required="false"/>
         <f:viewParam name="country" value="#{newsfeedView.country}" required="false"/>
-        <!--todo: include source param? -->
+        <f:viewParam name="source" value="#{newsfeedView.source}" converter="#{sourceConverter}" required="false"/>
         <f:viewAction action="#{newsfeedView.filterSources}"/>
     </f:metadata>
 
     <div id="header">
         <div class="inner">
-        <h:form>
-            <p:selectOneMenu id="category" value="#{newsfeedView.category}" styleClass="selectOneMenu">
-                <f:selectItem itemLabel="categories" itemValue="#{null}"/>
-                <f:selectItems value="#{sourcesCache.categories}" var="category"
+            <a id="logo">News Feed</a>
+
+            <div id="filterContainer">
+            <div id="filterSources">
+                <h:form>
+                    <p:selectOneMenu id="category" value="#{newsfeedView.category}" styleClass="selectOneMenu">
+                        <f:selectItem itemLabel="category" itemValue="#{null}"/>
+                        <f:selectItems value="#{sourcesCache.categories}" var="category"
                                    itemLabel="#{category}" itemValue="#{category}"/>
-            </p:selectOneMenu>
+                    </p:selectOneMenu>
 
-            <p:selectOneMenu id="country" value="#{newsfeedView.country}" styleClass="selectOneMenu">
-                <f:selectItem itemLabel="countries" itemValue="#{null}"/>
-                <f:selectItems value="#{sourcesCache.countries}" var="country"
+                    <p:selectOneMenu id="country" value="#{newsfeedView.country}" styleClass="selectOneMenu">
+                        <f:selectItem itemLabel="country" itemValue="#{null}"/>
+                        <f:selectItems value="#{sourcesCache.countries}" var="country"
                                itemLabel="#{country}" itemValue="#{country}"/>
-            </p:selectOneMenu>
+                    </p:selectOneMenu>
 
-            <p:selectOneMenu id="language" value="#{newsfeedView.language}" styleClass="selectOneMenu">
-                <f:selectItem itemLabel="languages" itemValue="#{null}"/>
-                <f:selectItems value="#{sourcesCache.languages}" var="language"
+                    <p:selectOneMenu id="language" value="#{newsfeedView.language}" styleClass="selectOneMenu">
+                        <f:selectItem itemLabel="language" itemValue="#{null}"/>
+                        <f:selectItems value="#{sourcesCache.languages}" var="language"
                                itemLabel="#{language}" itemValue="#{language}"/>
-            </p:selectOneMenu>
+                    </p:selectOneMenu>
 
-            <h:commandButton value="Filter!" action="newsfeed?faces-redirect=true&amp;includeViewParams=true" />
-        </h:form>
+                    <h:commandButton value="Filter!" action="newsfeed?faces-redirect=true&amp;includeViewParams=true" />
+                </h:form>
+            </div>
 
-        <h:form>
-            <p:selectOneMenu id="source" value="#{newsfeedView.source}" styleClass="selectOneMenu">
-                <p:ajax listener="#{newsfeedView.filterSources}" update="@all"/>
-                <f:selectItem itemLabel="Sources" itemValue="" noSelectionOption="true"/>
-                <f:selectItems value="#{newsfeedView.sourcesCache}" var="source"
+            <div id="selectSource">
+                <h:form>
+                    <p:selectOneMenu id="source" value="#{newsfeedView.source}" styleClass="selectOneMenu">
+                        <f:selectItem itemLabel="Sources" itemValue="#{null}"/>
+                        <f:selectItems value="#{newsfeedView.sourcesCache}" var="source"
                                itemValue="#{source.id}" itemLabel="#{source.name}"/>
-            </p:selectOneMenu>
-        </h:form>
+                    </p:selectOneMenu>
+
+                    <h:commandButton value="go" action="newsfeed?faces-redirect=true&amp;includeViewParams=true" />
+                </h:form>
+            </div>
+            </div>
         </div>
+        <!--<div class="lower">-->
+        <!--    <p id="poweredBy" align="center">Powered by <a href="https://newsapi.org">News API</a></p>-->
+        <!--</div>-->
     </div>
 
     <div id="main" class="main">
@@ -66,7 +78,7 @@
                 </ui:fragment>
                 <ui:repeat id="sources" value="#{newsfeedView.data}" var="element">
                 <div class="source-wrapper">
-                    <div class="source-header">
+                    <div class="source-aside">
                         <div class="image-wrapper">
                             <h:graphicImage alt="Oops, no image there!"
                                 rendered="#{element.source.urlsToLogos.medium != null and !element.source.urlsToLogos.medium.isEmpty()}"
@@ -77,13 +89,17 @@
                                 <h:outputText value="#{element.source.name}"/>
                             </h:outputLink>
                         </p>
+                        <div class="description">
+                            <p><h:outputText value="#{element.source.description}"/></p>
+                        </div>
                     </div>
+
                     <div class="articles-wrapper">
                 <ui:repeat value="#{element.articles}" var="article">
                     <div class="article">
                         <div class="text-wrapper">
                             <p><span class="title">#{article.title}</span> by <span class="author">#{article.author}</span></p>
-                            <p>Published <span class="date">#{article.publishedAt}</span></p>
+                            <!--<p>Published <span class="date">#{article.publishedAt}</span></p>-->
                             <p><h:outputText value="#{article.description}"/></p>
                             <h:outputLink value="#{article.url}">Continue reading...</h:outputLink>
                         </div>
@@ -99,6 +115,11 @@
                 <p:remoteCommand id="rcom" name="loadNext" update="@all"
                                  actionListener="#{newsfeedView.loadNext}" oncomplete="handleLoadStop()"/>
 
+                <!--this will be shown while loading-->
+                <p:dialog widgetVar="loadingDialog" resizable="false" showHeader="false">
+                    <h:graphicImage library="images" name="loading.gif" style="vertical-align: middle"/>
+                </p:dialog>
+
                 <pe:waypoint id="waypoint" widgetVar="waypointWidget"
                              offset="function(){return $.waypoints('viewportHeight') - $(this).outerHeight()}">
                     <pe:javascript event="reached" execute="handleLoadStart(ext);"/>
@@ -109,11 +130,13 @@
                     function handleLoadStart(ext) {
                         if (ext.direction == "down") {
                             PF('waypointWidget').disable();
+                            PF('loadingDialog').show();
                             loadNext();
                         }
                     }
 
                     function handleLoadStop() {
+                        PF('loadingDialog').hide();
                         PF('waypointWidget').enable();
                     }
 

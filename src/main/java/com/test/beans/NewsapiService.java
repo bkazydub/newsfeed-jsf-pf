@@ -24,17 +24,16 @@ import javax.ws.rs.core.MediaType;
 @ApplicationScoped
 public class NewsapiService {
 
+    /** News API url */
     public static final String API_URL = "https://newsapi.org/v1/";
 
     private static final String ARTICLES_ENDPOINT = "articles";
     private static final String SOURCES_ENDPOINT = "sources";
 
-    // todo: move to config file
     // the key is left for bootstrapping purposes only
     private String apiKey = "4773f235e779468b9445ca392c3ed7ba";
 
     private Client client;
-    // private WebTarget target;
     private WebTarget articlesTarget;
     private WebTarget sourcesTarget;
 
@@ -65,9 +64,6 @@ public class NewsapiService {
             throw new NullPointerException("Source id may not be null");
 
         WebTarget target = articlesTarget.queryParam("source", sourceId);
-        // todo: remove those checks?
-        /*if (sortBy != null && !(sortBy.isEmpty() || sortBy.equals("null")))
-            target.queryParam("sortBy", sortBy);*/
 
         return target.request(MediaType.APPLICATION_JSON).get(ArticlesResponse.class);
     }
@@ -93,8 +89,7 @@ public class NewsapiService {
         WebTarget target = sourcesTarget;
 
         // those checks may be unnecessary, but...
-        // "null" is treated because empty <f:selectItem itemValue="null" ...> produces "null"
-        // (but front- and back-end must be decoupled!)
+        // check against "null" is because empty ('select ...') <f:selectItem itemValue="null" ...> produces "null"
         if (category != null && !(category.isEmpty() || category.equals("null")))
             target = target.queryParam("category", category);
         if (language != null && !(language.isEmpty() || language.equals("null")))

@@ -65,31 +65,48 @@ public class NewsfeedView implements Serializable {
         int cacheSize = cache.size();
         for (;last < to && last < cacheSize; last++) {
             Source source = cache.get(last);
-            List<Article> articles = service.getArticlesResponse(source.getId()).getArticles();
+            List<Article> articles;
+            try {
+                 articles = service.getArticlesResponse(source.getId()).getArticles();
+            } catch (InternalServerErrorException e) {
+                articles = new ArrayList<>();
+                // logging goes here
+                // log.info("Can not fetch articles for " + source.getId() + ". Reason: " + e.getMessage());
+            }
             data.add(new DataContainer(source, articles));
         }
     }
 
     /**
      * Filter sources based on query parameters. Subsequent calls to {@link #loadNext()} will load data
-     * from the filtered sources. If all parameters are absent
-     * or empty then all available (by <a href="https://newsapi.org">news service</a>) sources will be used.
+     * from the filtered sources. Note that if {@code this.source != null} the source will be the only one
+     * available in {@link #getData()}, i.e. it takes precedence over other request parameters.
+     * If all parameters are absent or empty then all available
+     * (by <a href="https://newsapi.org">news service</a>) sources will be used.
      * @return empty {@code String} to recreate a view
      */
     public String filterSources() {
         last = 0;
         data.clear();
-        if (category == null && language == null && country == null) {
-            custom = false;
-        } else {
-            custom = true;
-            try {
-                customCache = service.getSourcesResponse(category, language, country).getSources();
-            } catch (InternalServerErrorException e) {
-                // This means there are no sources for specified criteria.
-                // Please refer to NewsapiService#getSourcesResponse to see why it is handled this way
-                customCache = new ArrayList<>();
+        if (source == null) {
+            if (category == null && language == null && country == null) {
+                custom = false;
+            } else {
+                custom = true;
+                try {
+                    customCache = service.getSourcesResponse(category, language, country).getSources();
+                } catch (InternalServerErrorException e) {
+                    // This means there are no sources for specified criteria.
+                    // Please refer to NewsapiService#getSourcesResponse to see why it is handled this way
+                    customCache = new ArrayList<>();
+                }
             }
+        } else {
+            // if source is specified as request parameter, then it'll going to be
+            // single customCache entry
+            customCache = new ArrayList<>();
+            customCache.add(source);
+            custom = true;
         }
         loadNext();
         // create new view
