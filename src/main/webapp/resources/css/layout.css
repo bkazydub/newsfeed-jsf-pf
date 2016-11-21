@@ -8,14 +8,12 @@ The unholy place...
     height: 80px;
     position: fixed;
     background-color: lightcoral;
-    /*overflow: hidden;*/
     width: 100%;
 }
 
 #header .inner {
     width: 80%;
     margin: auto;
-    /*overflow: hidden;*/
 }
 
 #main {
@@ -24,26 +22,21 @@ The unholy place...
     top: auto;
 }
 
-#header form {
-    display: inline;
-}
-
 #filterSources, #selectSource {
-    display: block;
+    display: inline-block;
+    margin-left: 5%;
+    margin-top: 10px;
+    float: left;
 }
 
 #filterSources {
-    width: 50%;
+    max-width: 50%;
     float: left;
 }
 
 #selectSource {
-    width: 30%;
-    float: right;
-}
-
-.selectOneMenu {
-    width: 125px;
+    max-width: 30%;
+    float: left;
 }
 
 .right {
@@ -124,10 +117,6 @@ The unholy place...
     vertical-align:middle;
 }
 
-#filterSources, #selectSource {
-    clear: both;
-}
-
 .ui-selectonemenu-items, .ui-selectonemenu-list {
     background: floralwhite !important;
 }
@@ -140,6 +129,8 @@ The unholy place...
 
 #poweredBy {
     color: floralwhite;
+    display: inline-block;
+    float: left;
 }
 
 #poweredBy a {
@@ -150,11 +141,7 @@ The unholy place...
 #header .lower {
     max-width: 20%;
     margin: auto;
-}
-
-#filterContainer {
-    width: 100%;
-    clear: both;
+    display: block;
 }
 
 span.author {
@@ -165,10 +152,16 @@ span.title {
     font-weight: bold;
 }
 
-#logo {
+.logo {
+    max-width: 20%;
+    float: left;
+}
+
+.logo span {
     color: floralwhite;
-    display: block;
-    font-size: 2rem;
-    white-space: nowrap;
-    width: 20%;
+    text-align: center;
+}
+
+#logo {
+    font-size: 1.5rem;
 }

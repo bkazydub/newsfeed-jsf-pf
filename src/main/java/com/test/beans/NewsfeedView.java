@@ -22,18 +22,19 @@ public class NewsfeedView implements Serializable {
     private NewsapiService service;
     @Inject
     private SourcesCache sourcesCache;
-    // holds all filtered sources
+    // Holds sources that match queried parameters
     private List<Source> customCache;
     // all loaded sources with articles
     private List<DataContainer> data;
 
-    // request parameters (which are self-descriptive enough, no?)
+    // request parameters
     private String category;
     private String country;
     private String language;
     // single selected source
     private Source source;
-
+    // Indicates if query contains any request parameter, for filtering sources.
+    // If custom is set to false, then all sources, found in SourcesCache, will be returned.
     private boolean custom = false;
 
     // last source that was added to data container
@@ -90,10 +91,12 @@ public class NewsfeedView implements Serializable {
         data.clear();
         if (source == null) {
             if (category == null && language == null && country == null) {
+                // SourcesCache for the rescue!
                 custom = false;
             } else {
                 custom = true;
                 try {
+                    // Retrieve sources accordingly to request
                     customCache = service.getSourcesResponse(category, language, country).getSources();
                 } catch (InternalServerErrorException e) {
                     // This means there are no sources for specified criteria.
@@ -102,8 +105,8 @@ public class NewsfeedView implements Serializable {
                 }
             }
         } else {
-            // if source is specified as request parameter, then it'll going to be
-            // single customCache entry
+            // if source is specified as request parameter, then it is going to be
+            // the only customCache entry
             customCache = new ArrayList<>();
             customCache.add(source);
             custom = true;
@@ -121,26 +124,55 @@ public class NewsfeedView implements Serializable {
         return data;
     }
 
+    /**
+     * {@code category} request parameter for News API sources endpoint.
+     * If any of these parameters (other are {@link #getCountry()} and {@link #getLanguage()}) is set to value,
+     * other than {@code null}, sources will be retrieved (in {@link #filterSources()} based on these parameters
+     * @return currently set value.
+     * @see NewsapiService
+     */
     public String getCategory() {
         return category;
     }
 
+    /**
+     * Set current {@code category} request parameter.
+     * @param category valid values are given in {@link SourcesCache#getCategories()}
+     */
     public void setCategory(String category) {
         this.category = category;
     }
 
+    /**
+     * {@code country} request parameter for News API sources endpoint.
+     * @return currently set value.
+     * @see NewsapiService, getCategory()
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * Set current {@code country} request parameter.
+     * @param country valid values are given in {@link SourcesCache#getCountries()}
+     */
     public void setCountry(String country) {
         this.country = country;
     }
 
+    /**
+     * {@code language} request parameter for News API sources endpoint.
+     * @return currently set value.
+     * @see NewsapiService, getCategory()
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * Set current {@code language} request parameter.
+     * @param language valid values are given in {@link SourcesCache#getLanguages()}
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
@@ -165,6 +197,10 @@ public class NewsfeedView implements Serializable {
         return source;
     }
 
+    /**
+     * Set {@code Source} requested in query
+     * @param source the source being requested
+     */
     public void setSource(Source source) {
         this.source = source;
     }

@@ -23,24 +23,26 @@
 
     <div id="header">
         <div class="inner">
-            <a id="logo">News Feed</a>
-
-            <div id="filterContainer">
+            <div class="logo">
+                <span id="logo">NewsFeed</span>
+                <span id="poweredBy">Powered by <a href="https://newsapi.org">News API</a></span>
+            </div>
+            <!--<div id="filterContainer">-->
             <div id="filterSources">
                 <h:form>
-                    <p:selectOneMenu id="category" value="#{newsfeedView.category}" styleClass="selectOneMenu">
+                    <p:selectOneMenu id="category" value="#{newsfeedView.category}">
                         <f:selectItem itemLabel="category" itemValue="#{null}"/>
                         <f:selectItems value="#{sourcesCache.categories}" var="category"
                                    itemLabel="#{category}" itemValue="#{category}"/>
                     </p:selectOneMenu>
 
-                    <p:selectOneMenu id="country" value="#{newsfeedView.country}" styleClass="selectOneMenu">
+                    <p:selectOneMenu id="country" value="#{newsfeedView.country}">
                         <f:selectItem itemLabel="country" itemValue="#{null}"/>
                         <f:selectItems value="#{sourcesCache.countries}" var="country"
                                itemLabel="#{country}" itemValue="#{country}"/>
                     </p:selectOneMenu>
 
-                    <p:selectOneMenu id="language" value="#{newsfeedView.language}" styleClass="selectOneMenu">
+                    <p:selectOneMenu id="language" value="#{newsfeedView.language}">
                         <f:selectItem itemLabel="language" itemValue="#{null}"/>
                         <f:selectItems value="#{sourcesCache.languages}" var="language"
                                itemLabel="#{language}" itemValue="#{language}"/>
@@ -52,8 +54,8 @@
 
             <div id="selectSource">
                 <h:form>
-                    <p:selectOneMenu id="source" value="#{newsfeedView.source}" styleClass="selectOneMenu">
-                        <f:selectItem itemLabel="Sources" itemValue="#{null}"/>
+                    <p:selectOneMenu id="source" value="#{newsfeedView.source}">
+                        <f:selectItem itemLabel="sources" itemValue="#{null}"/>
                         <f:selectItems value="#{newsfeedView.sourcesCache}" var="source"
                                itemValue="#{source.id}" itemLabel="#{source.name}"/>
                     </p:selectOneMenu>
@@ -61,11 +63,11 @@
                     <h:commandButton value="go" action="newsfeed?faces-redirect=true&amp;includeViewParams=true" />
                 </h:form>
             </div>
-            </div>
+            <!--</div>-->
         </div>
-        <!--<div class="lower">-->
-        <!--    <p id="poweredBy" align="center">Powered by <a href="https://newsapi.org">News API</a></p>-->
-        <!--</div>-->
+        <!--<div class="lower">
+            <p id="poweredBy" align="center">Powered by <a href="https://newsapi.org">News API</a></p>
+        </div>-->
     </div>
 
     <div id="main" class="main">
