@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:head>
+        <h:outputStylesheet library="css" name="layout.css"/>
+        <title>News Feed</title>
+    </h:head>
+
+    <h:body>
+
+    <f:metadata>
+        <!-- make use of 'get' request parameters -->
+        <f:viewParam name="category" value="#{newsfeedView.category}" required="false"/>
+        <f:viewParam name="language" value="#{newsfeedView.language}" required="false"/>
+        <f:viewParam name="country" value="#{newsfeedView.country}" required="false"/>
+        <!--todo: include source param? -->
+        <f:viewAction action="#{newsfeedView.filterSources}"/>
+    </f:metadata>
+
+    <div id="header">
+        <div class="inner">
+        <h:form>
+            <p:selectOneMenu id="category" value="#{newsfeedView.category}" styleClass="selectOneMenu">
+                <f:selectItem itemLabel="categories" itemValue="#{null}"/>
+                <f:selectItems value="#{sourcesCache.categories}" var="category"
+                                   itemLabel="#{category}" itemValue="#{category}"/>
+            </p:selectOneMenu>
+
+            <p:selectOneMenu id="country" value="#{newsfeedView.country}" styleClass="selectOneMenu">
+                <f:selectItem itemLabel="countries" itemValue="#{null}"/>
+                <f:selectItems value="#{sourcesCache.countries}" var="country"
+                               itemLabel="#{country}" itemValue="#{country}"/>
+            </p:selectOneMenu>
+
+            <p:selectOneMenu id="language" value="#{newsfeedView.language}" styleClass="selectOneMenu">
+                <f:selectItem itemLabel="languages" itemValue="#{null}"/>
+                <f:selectItems value="#{sourcesCache.languages}" var="language"
+                               itemLabel="#{language}" itemValue="#{language}"/>
+            </p:selectOneMenu>
+
+            <h:commandButton value="Filter!" action="newsfeed?faces-redirect=true&amp;includeViewParams=true" />
+        </h:form>
+
+        <h:form>
+            <p:selectOneMenu id="source" value="#{newsfeedView.source}" styleClass="selectOneMenu">
+                <p:ajax listener="#{newsfeedView.filterSources}" update="@all"/>
+                <f:selectItem itemLabel="Sources" itemValue="" noSelectionOption="true"/>
+                <f:selectItems value="#{newsfeedView.sourcesCache}" var="source"
+                               itemValue="#{source.id}" itemLabel="#{source.name}"/>
+            </p:selectOneMenu>
+        </h:form>
+        </div>
+    </div>
+
+    <div id="main" class="main">
+            <h:form id="mainForm">
+            <div id="news">
+                <ui:fragment rendered="#{empty newsfeedView.data}">
+                    <div id="noNews">
+                        <span>Oops!.. It seems there are no sources for requested criteria. Please, do not be discouraged to try again!</span>
+                    </div>
+                </ui:fragment>
+                <ui:repeat id="sources" value="#{newsfeedView.data}" var="element">
+                <div class="source-wrapper">
+                    <div class="source-header">
+                        <div class="image-wrapper">
+                            <h:graphicImage alt="Oops, no image there!"
+                                rendered="#{element.source.urlsToLogos.medium != null and !element.source.urlsToLogos.medium.isEmpty()}"
+                                            value="#{element.source.urlsToLogos.medium}"/>
+                        </div>
+                        <p class="title" align="center">
+                            <h:outputLink value="#{element.source.url}">
+                                <h:outputText value="#{element.source.name}"/>
+                            </h:outputLink>
+                        </p>
+                    </div>
+                    <div class="articles-wrapper">
+                <ui:repeat value="#{element.articles}" var="article">
+                    <div class="article">
+                        <div class="text-wrapper">
+                            <p><span class="title">#{article.title}</span> by <span class="author">#{article.author}</span></p>
+                            <p>Published <span class="date">#{article.publishedAt}</span></p>
+                            <p><h:outputText value="#{article.description}"/></p>
+                            <h:outputLink value="#{article.url}">Continue reading...</h:outputLink>
+                        </div>
+                        <div class="image-wrapper">
+                            <h:graphicImage alt="Oops, no image there!" rendered="#{article.urlToImage != null and !article.urlToImage.isEmpty()}" value="#{article.urlToImage}"/>
+                        </div>
+                    </div>
+                </ui:repeat>
+                        </div>
+                </div>
+            </ui:repeat>
+            </div>
+                <p:remoteCommand id="rcom" name="loadNext" update="@all"
+                                 actionListener="#{newsfeedView.loadNext}" oncomplete="handleLoadStop()"/>
+
+                <pe:waypoint id="waypoint" widgetVar="waypointWidget"
+                             offset="function(){return $.waypoints('viewportHeight') - $(this).outerHeight()}">
+                    <pe:javascript event="reached" execute="handleLoadStart(ext);"/>
+                </pe:waypoint>
+
+                <h:outputScript id="waypointScript" target="body">
+                    /* <![CDATA[ */
+                    function handleLoadStart(ext) {
+                        if (ext.direction == "down") {
+                            PF('waypointWidget').disable();
+                            loadNext();
+                        }
+                    }
+
+                    function handleLoadStop() {
+                        PF('waypointWidget').enable();
+                    }
+
+                    /* ]]> */
+                </h:outputScript>
+            </h:form>
+        </div>
+</h:body>
+</html>

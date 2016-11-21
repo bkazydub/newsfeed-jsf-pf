@@ -1,0 +1,89 @@
+#header {
+    top: 0;
+    height: 80px;
+    position: fixed;
+    background-color: green;
+    width: 100%;
+}
+
+#header .inner {
+    width: 80%;
+    margin: auto;
+}
+
+#main {
+    width: 90%;
+    margin: 80px auto auto;
+    top: auto;
+}
+
+#header form {
+    display: inline;
+}
+
+.selectOneMenu {
+    width: 125px;
+}
+
+.right {
+    float: right;
+}
+
+.source-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin: auto auto 50px;
+}
+
+.source-header {
+    width: 30%;
+    float: left;
+}
+
+.source-header .image-wrapper {
+    width: 90%;
+    padding: 5%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.image-wrapper img {
+    width: 100%;
+}
+
+.source-header span.title {
+    text-align: center;
+}
+
+.articles-wrapper {
+    width: 60%;
+    padding: 5%;
+    /*float: left;*/
+    /*float: right;*/
+    margin-left: 30%;
+    /*background-color: azure;*/
+}
+
+.article {
+    width: 90%;
+    /*background-color: azure;*/
+    background-color: floralwhite;
+    margin: auto auto 2%;
+    padding: 5%;
+    overflow: hidden;
+}
+
+.article .text-wrapper {
+    width: 80%;
+    float: left;
+}
+
+.article .image-wrapper {
+    width: 20%;
+    float: left;
+}
+
+.article img {
+    width: 100%;
+}
+
