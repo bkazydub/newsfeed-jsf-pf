@@ -120,4 +120,26 @@ public class Source implements Serializable {
             this.large = large;
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Source))
+            return false;
+
+        if (this.id == null)
+            return false;
+
+        Source other = (Source) obj;
+
+        return this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

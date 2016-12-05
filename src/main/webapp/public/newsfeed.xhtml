@@ -27,7 +27,6 @@
                 <span id="logo">NewsFeed</span>
                 <span id="poweredBy">Powered by <a href="https://newsapi.org">News API</a></span>
             </div>
-            <!--<div id="filterContainer">-->
             <div id="filterSources">
                 <h:form>
                     <p:selectOneMenu id="category" value="#{newsfeedView.category}">
@@ -54,20 +53,17 @@
 
             <div id="selectSource">
                 <h:form>
-                    <p:selectOneMenu id="source" value="#{newsfeedView.source}">
+                    <p:selectOneMenu id="source" value="#{newsfeedView.source}" converter="#{sourceConverter}">
                         <f:selectItem itemLabel="sources" itemValue="#{null}"/>
                         <f:selectItems value="#{newsfeedView.sourcesCache}" var="source"
-                               itemValue="#{source.id}" itemLabel="#{source.name}"/>
+                               itemValue="#{source}" itemLabel="#{source.name}"/>
                     </p:selectOneMenu>
+                    <p:message for="source"/>
 
                     <h:commandButton value="go" action="newsfeed?faces-redirect=true&amp;includeViewParams=true" />
                 </h:form>
             </div>
-            <!--</div>-->
         </div>
-        <!--<div class="lower">
-            <p id="poweredBy" align="center">Powered by <a href="https://newsapi.org">News API</a></p>
-        </div>-->
     </div>
 
     <div id="main" class="main">
